@@ -25,4 +25,16 @@ module HolidayJp
   def self.holiday?(date)
     !HOLIDAYS[date].nil?
   end
+
+  def self.next_holiday
+    next_holiday_from Date.today
+  end
+
+  def self.next_holiday_from(date_start)
+    last_holiday = HOLIDAYS.keys.last
+
+    (date_start..last_holiday).each do |date|
+      return date if holiday?(date)
+    end
+  end
 end

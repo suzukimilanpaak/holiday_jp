@@ -29,4 +29,10 @@ class TestHolidayJp < Test::Unit::TestCase
       assert HolidayJp.holiday?(Date.new(year, 8, 11))
     end
   end
+
+  should "#next_holiday_from '2014-09-28' is '2014-10-03'" do
+    actual = HolidayJp.next_holiday_from(Date.new(2014, 9, 28))
+    expected = Date.new(2014, 10, 13)
+    assert_equal actual, expected
+  end
 end
