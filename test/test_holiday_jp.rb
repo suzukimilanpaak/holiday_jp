@@ -55,4 +55,10 @@ class TestHolidayJp < Test::Unit::TestCase
     actual = HolidayJp.possible_silver_week(2015)
     assert_equal expected, actual
   end
+
+  should "#next_holidays 2014-11-23 starts on 22nd Nov Sat, 2014, and ends on 24th Nov Mon, 2014" do
+    expected = Date.new(2014, 11, 22)..Date.new(2014, 11, 24)
+    actual = HolidayJp.next_holidays_from(Date.new(2014, 11, 23))
+    assert_equal expected, actual
+  end
 end
