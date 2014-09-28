@@ -1353,6 +1353,11 @@ module HolidayJp
     add_observances(period)
   end
 
+  def self.minimum_silver_week(year)
+    period = Date.new(year, 9, 21)..Date.new(year, 9, 23)
+    add_observances(period)
+  end
+
   def self.add_observances(period)
     holidays_on_sunday = period.select(&:sunday?)
     return period.to_a if holidays_on_sunday.nil? || holidays_on_sunday.size == 0

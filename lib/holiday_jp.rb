@@ -48,8 +48,8 @@ module HolidayJp
     possible_holiday(period)
   end
 
-  def silver_weeek(year)
-    period = minimum_golden_week(year)
+  def self.possible_silver_week(year)
+    period = minimum_silver_week(year)
     possible_holiday(period)
   end
 

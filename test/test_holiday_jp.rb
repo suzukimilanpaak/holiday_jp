@@ -49,4 +49,10 @@ class TestHolidayJp < Test::Unit::TestCase
     actual = HolidayJp.possible_golden_week(2015)
     assert_equal expected, actual
   end
+
+  should "#possible_silver_week(2015) starts on 19th Sep Sat, 2015 and ends on 27th Sep Sun, 2015" do
+    expected = Date.new(2015, 9, 19)..Date.new(2015, 9, 27)
+    actual = HolidayJp.possible_silver_week(2015)
+    assert_equal expected, actual
+  end
 end
