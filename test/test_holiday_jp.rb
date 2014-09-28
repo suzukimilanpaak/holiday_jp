@@ -35,4 +35,10 @@ class TestHolidayJp < Test::Unit::TestCase
     expected = Date.new(2014, 10, 13)
     assert_equal actual, expected
   end
+
+  should "#possible_new_year_holiday(2014) starts on 27th Sat Dec, 2014 and ends on 4th Sun Jan, 2015" do
+    actual = HolidayJp.possible_new_year_holiday(2014)
+    expected = Date.new(2014, 12, 27)..Date.new(2015, 1, 4)
+    assert_equal actual, expected
+  end
 end

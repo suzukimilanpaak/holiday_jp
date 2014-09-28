@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 require 'holiday_jp/holiday'
 require 'holiday_jp/holidays'
+require 'active_support/core_ext/date'
 
 module HolidayJp
   # == Between date
@@ -26,6 +27,14 @@ module HolidayJp
     !HOLIDAYS[date].nil?
   end
 
+  def self.weekend?(date)
+    date.saturday? || date.sunday?
+  end
+
+  def self.day_off?(date)
+    weekend?(date) || holiday?(date)
+  end
+
   def self.next_holiday
     next_holiday_from Date.today
   end
@@ -36,5 +45,30 @@ module HolidayJp
     (date_start..last_holiday).each do |date|
       return date if holiday?(date)
     end
+  end
+
+  def self.possible_new_year_holiday(year)
+   period = minimum_new_year_holiday(year)
+   possible_holiday(period)
+  end
+
+  private
+
+  def self.possible_holiday(period)
+    beggining = nil
+    ending = nil
+
+     # Assume you can take two days of on your own. And, if there is
+    # adjacent weekend, we can combine it with the holiday. So, here
+    # we add up 4 to the edge of holiday.
+    possibility = period.first.advance(days: -4)..period.last.advance(days: 4)
+    possibility.each {|date|
+      if beggining.nil? && day_off?(date)
+        beggining = date
+      elsif day_off?(date)
+        ending = date
+      end
+    }
+    beggining..ending
   end
 end

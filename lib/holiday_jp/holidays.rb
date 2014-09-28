@@ -1322,4 +1322,13 @@ module HolidayJp
     ["2050-12-23","天皇誕生日"],
   ]
   HOLIDAYS = Hash[base_holidays.map {|e| [(h = Holiday.new(*e)).date, h]}]
+
+  def self.minimum_new_year_holiday(year)
+    Date.new(year, 12, 30)..Date.new(year + 1, 1, 3)
+  end
+
+  def self.minimum_golden_week(year)
+    Date.new(year, 4, 29)..Date.new(year, 5, 5)
+  end
+
 end
