@@ -26,6 +26,15 @@ module HolidayJp
     !HOLIDAYS[date].nil?
   end
 
+  def self.next_holidays(date = Date.today)
+    next_holidays_from(date)
+  end
+
+  def self.next_holidays_from(date)
+    period = next_holiday_from(date)..next_holiday_from(date)
+    possible_holiday(period, 1)
+  end
+
   def self.next_holiday
     next_holiday_from Date.today
   end
@@ -38,31 +47,31 @@ module HolidayJp
     end
   end
 
-  def self.possible_new_year_holiday(year)
+  def self.possible_new_year_holiday(year = Date.today.year)
    period = minimum_new_year_holiday(year)
    possible_holiday(period)
   end
 
-  def self.possible_golden_week(year)
+  def self.possible_golden_week(year = Date.today.year)
     period = minimum_golden_week(year)
     possible_holiday(period)
   end
 
-  def self.possible_silver_week(year)
+  def self.possible_silver_week(year = Date.today.year)
     period = minimum_silver_week(year)
     possible_holiday(period)
   end
 
   private
 
-  def self.possible_holiday(period)
+  # Assume you can take two days of on your own. And, if there is
+  # adjacent weekend, we can combine it with the holiday. So, here
+  # we add up 4 to the edge of holiday.
+  def self.possible_holiday(period, surrounding_days = 5)
     beggining = nil
     ending = nil
 
-     # Assume you can take two days of on your own. And, if there is
-    # adjacent weekend, we can combine it with the holiday. So, here
-    # we add up 4 to the edge of holiday.
-    possibility = period.first.advance(days: -4)..period.last.advance(days: 4)
+    possibility = period.first.advance(days: -surrounding_days)..period.last.advance(days: surrounding_days)
     possibility.each {|date|
       if beggining.nil? && day_off?(date)
         beggining = date
