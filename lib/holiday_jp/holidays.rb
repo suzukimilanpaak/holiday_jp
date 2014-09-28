@@ -1,3 +1,6 @@
+require 'date'
+require 'active_support/core_ext/date'
+
 # -*- coding: utf-8 -*-
 module HolidayJp
   base_holidays = [
@@ -1323,12 +1326,61 @@ module HolidayJp
   ]
   HOLIDAYS = Hash[base_holidays.map {|e| [(h = Holiday.new(*e)).date, h]}]
 
+  # FIXME observed? should be implemented in Holiday class
+  # But, as a quick implementation, I extended Date class
+  class ::Date
+    attr_accessor :observed
+
+    def observed?
+      @observed || false
+    end
+  end
+
+  def self.weekend?(date)
+    date.saturday? || date.sunday?
+  end
+
+  def self.day_off?(date)
+    weekend?(date) || holiday?(date) || date.observed?
+  end
+
   def self.minimum_new_year_holiday(year)
-    Date.new(year, 12, 30)..Date.new(year + 1, 1, 3)
+    (Date.new(year, 12, 30)..Date.new(year + 1, 1, 3)).to_a
   end
 
   def self.minimum_golden_week(year)
-    Date.new(year, 4, 29)..Date.new(year, 5, 5)
+    period = Date.new(year, 4, 29)..Date.new(year, 5, 5)
+    add_observances(period)
   end
 
+  def self.add_observances(period)
+    holidays_on_sunday = period.select(&:sunday?)
+    return period.to_a if holidays_on_sunday.nil? || holidays_on_sunday.size == 0
+
+    remaining_holiday = holidays_on_sunday.first
+    period.each {|date|
+      if remaining_holiday.past? && !day_off?(date)
+        date.observed = true
+        holidays_on_sunday.shift
+      end
+    }
+
+    # Extend holiday if there still is ovservaces remaining
+    if holidays_on_sunday.size > 0
+      additionals = []
+      date = period.last.advance(days: 1)
+      while(holidays_on_sunday.size > 0) do
+        if !day_off?(date)
+          date.observed = true
+          holidays_on_sunday.shift
+        end
+        additionals << date
+        date = date.advance(days: 1)
+      end
+
+      period.to_a + additionals
+    else
+      period.to_a
+    end
+  end
 end

@@ -17,7 +17,6 @@ module HolidayJp
     end.map(&:last)
   end
 
-
   # == Whether the date is holiday or not.
   # === Example:
   # >> HolidayJp.holiday?(Date.new(2011, 9, 19)) # => true
@@ -25,14 +24,6 @@ module HolidayJp
   # * <tt>date</tt>
   def self.holiday?(date)
     !HOLIDAYS[date].nil?
-  end
-
-  def self.weekend?(date)
-    date.saturday? || date.sunday?
-  end
-
-  def self.day_off?(date)
-    weekend?(date) || holiday?(date)
   end
 
   def self.next_holiday
@@ -50,6 +41,16 @@ module HolidayJp
   def self.possible_new_year_holiday(year)
    period = minimum_new_year_holiday(year)
    possible_holiday(period)
+  end
+
+  def self.possible_golden_week(year)
+    period = minimum_golden_week(year)
+    possible_holiday(period)
+  end
+
+  def silver_weeek(year)
+    period = minimum_golden_week(year)
+    possible_holiday(period)
   end
 
   private

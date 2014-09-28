@@ -31,14 +31,22 @@ class TestHolidayJp < Test::Unit::TestCase
   end
 
   should "#next_holiday_from '2014-09-28' is '2014-10-03'" do
-    actual = HolidayJp.next_holiday_from(Date.new(2014, 9, 28))
     expected = Date.new(2014, 10, 13)
-    assert_equal actual, expected
+    actual = HolidayJp.next_holiday_from(Date.new(2014, 9, 28))
+    assert_equal expected, actual
   end
 
   should "#possible_new_year_holiday(2014) starts on 27th Sat Dec, 2014 and ends on 4th Sun Jan, 2015" do
-    actual = HolidayJp.possible_new_year_holiday(2014)
     expected = Date.new(2014, 12, 27)..Date.new(2015, 1, 4)
-    assert_equal actual, expected
+    actual = HolidayJp.possible_new_year_holiday(2014)
+    assert_equal expected, actual
+  end
+
+  # This case has Constitution Memorial Day observed on 6th May. So,
+  # holiday ends on 10th May Sunday 2014.
+  should "#possible_golden_week(2015) starts on 25th Sat Apr, 2015 and ends on 10th Sun May, 2015" do
+    expected = Date.new(2015, 4, 25)..Date.new(2015, 5, 10)
+    actual = HolidayJp.possible_golden_week(2015)
+    assert_equal expected, actual
   end
 end
